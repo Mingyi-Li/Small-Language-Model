@@ -1,0 +1,1 @@
+# Loads trained model and generates text from a prompt
