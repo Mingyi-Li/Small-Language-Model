@@ -6,10 +6,10 @@ import torch
 from config import batch_size, block_size
 
 # Read input.txt
-with open("../data/input.txt", "r", encoding="utf-8") as f:
+with open("data/input.txt", "r", encoding="utf-8") as f:
     text = f.read()
 
-print("Dataset length:", len(text))
+# print("Dataset length:", len(text))
 
 # Sort all input chars
 chars = sorted(list(set(text)))
@@ -37,7 +37,7 @@ decoded = decode(encoded)
 
 # Convert to tensor
 data = torch.tensor(encode(text), dtype=torch.long)
-print("data shape:", data.shape)
+# print("data shape:", data.shape)
 
 # Train / validation split
 n = int(0.9 * len(data))
