@@ -41,3 +41,38 @@ This project is designed to:
 ---
 
 ## Project Structure
+
+- `src/config.py`: hyperparameters such as `block_size`, `n_embd`, `n_head`, `n_layer`, and `dropout`
+- `src/data.py`: character vocabulary, encoding/decoding, train/validation split, and batch sampling
+- `src/model.py`: bigram baseline, single-head attention model, and full transformer language model
+- `src/train.py`: training loop for the transformer model
+- `src/generate.py`: placeholder for loading a trained model and generating from a prompt
+- `data/input.txt`: training text
+
+---
+
+## Transformer Core
+
+The current full model is `TransformerLanguageModel` in `src/model.py`.
+
+Input token ids have shape `(B, T)`, where:
+
+- `B` is batch size
+- `T` is context length
+- `T` must be no larger than `block_size`
+
+The forward pass is:
+
+1. Token embeddings turn ids into vectors: `(B, T) -> (B, T, n_embd)`
+2. Positional embeddings give each position an identity, then get added to token embeddings
+3. Transformer blocks repeatedly update the sequence representation
+4. Final layer norm stabilizes the last representation
+5. The language-model head returns next-token logits: `(B, T, vocab_size)`
+
+The transformer pieces are:
+
+- `Head`: one causal self-attention head. Each token can read only previous tokens and itself.
+- `MultiHeadAttention`: runs several `Head`s in parallel, concatenates their outputs, then projects back to `n_embd`.
+- `FeedForward`: a per-token MLP. Attention mixes information across time; this layer processes each token's updated vector.
+- `Block`: one transformer block using layer norm, residual connections, multi-head attention, and feedforward computation.
+- `TransformerLanguageModel`: embeddings, a stack of `Block`s, final normalization, output head, loss, and generation.
